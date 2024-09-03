@@ -1,56 +1,56 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 public class Dough
 {
-    private string _flour_type;
-    private string _baking_technique;
-    private double _weight;
+    private string flourType;
+    private string bakingTechnique;
+    private double weight;
 
-    private static readonly double _base_calories_per_gram = 2.0;
-    private static readonly double _white_flour_modifier = 1.5;
-    private static readonly double _wholegrain_flour_modifier = 1.0;
-    private static readonly double _crispy_technique_modifier = 0.9;
-    private static readonly double _chewy_technique_modifier = 1.1;
-    private static readonly double _homemade_technique_modifier = 1.0;
+    private static readonly double BaseCaloriesPerGram = 2.0;
+    private static readonly double WhiteFlourModifier = 1.5;
+    private static readonly double WholegrainFlourModifier = 1.0;
+    private static readonly double CrispyTechniqueModifier = 0.9;
+    private static readonly double ChewyTechniqueModifier = 1.1;
+    private static readonly double HomemadeTechniqueModifier = 1.0;
 
     public string FlourType
     {
-        get => _flour_type;
+        get => flourType;
         private set
         {
             if (value != "White" && value != "Wholegrain")
             {
                 throw new ArgumentException("Invalid type of dough.");
             }
-            _flour_type = value;
+            flourType = value;
         }
     }
 
     public string BakingTechnique
     {
-        get => _baking_technique;
+        get => bakingTechnique;
         private set
         {
             if (value != "Crispy" && value != "Chewy" && value != "Homemade")
             {
                 throw new ArgumentException("Invalid type of dough.");
             }
-            _baking_technique = value;
+            bakingTechnique = value;
         }
     }
 
     public double Weight
     {
-        get => _weight;
+        get => weight;
         private set
         {
             if (value < 1 || value > 200)
             {
                 throw new ArgumentException("Dough weight should be in the range [1..200].");
             }
-            _weight = value;
+            weight = value;
         }
     }
 
@@ -63,12 +63,12 @@ public class Dough
 
     private double GetCaloriesPerGram()
     {
-        double flour_modifier = FlourType == "White" ? _white_flour_modifier : _wholegrain_flour_modifier;
-        double technique_modifier = BakingTechnique == "Crispy" ? _crispy_technique_modifier
-                              : BakingTechnique == "Chewy" ? _chewy_technique_modifier
-                              : _homemade_technique_modifier;
+        double flourModifier = FlourType == "White" ? WhiteFlourModifier : WholegrainFlourModifier;
+        double techniqueModifier = BakingTechnique == "Crispy" ? CrispyTechniqueModifier
+                              : BakingTechnique == "Chewy" ? ChewyTechniqueModifier
+                              : HomemadeTechniqueModifier;
 
-        return _base_calories_per_gram * flour_modifier * technique_modifier;
+        return BaseCaloriesPerGram * flourModifier * techniqueModifier;
     }
 
     public double CalculateCalories()
@@ -79,38 +79,38 @@ public class Dough
 
 public class Topping
 {
-    private string _topping_type;
-    private double _weight;
+    private string toppingType;
+    private double weight;
 
-    private static readonly double _base_calories_per_gram = 2.0;
-    private static readonly double _meat_modifier = 1.2;
-    private static readonly double _vegetables_modifier = 0.8;
-    private static readonly double _cheese_modifier = 1.1;
-    private static readonly double _sauce_modifier = 0.9;
+    private static readonly double BaseCaloriesPerGram = 2.0;
+    private static readonly double MeatModifier = 1.2;
+    private static readonly double VegetablesModifier = 0.8;
+    private static readonly double CheeseModifier = 1.1;
+    private static readonly double SauceModifier = 0.9;
 
     public string ToppingType
     {
-        get => _topping_type;
+        get => toppingType;
         private set
         {
             if (value != "Meat" && value != "Vegetables" && value != "Cheese" && value != "Sauce")
             {
                 throw new ArgumentException($"Cannot place {value} on top of your pizza.");
             }
-            _topping_type = value;
+            toppingType = value;
         }
     }
 
     public double Weight
     {
-        get => _weight;
+        get => weight;
         private set
         {
             if (value < 1 || value > 50)
             {
                 throw new ArgumentException($"{ToppingType} weight should be in the range [1..50].");
             }
-            _weight = value;
+            weight = value;
         }
     }
 
@@ -124,14 +124,14 @@ public class Topping
     {
         double modifier = ToppingType switch
         {
-            "Meat" => _meat_modifier,
-            "Vegetables" => _vegetables_modifier,
-            "Cheese" => _cheese_modifier,
-            "Sauce" => _sauce_modifier,
+            "Meat" => MeatModifier,
+            "Vegetables" => VegetablesModifier,
+            "Cheese" => CheeseModifier,
+            "Sauce" => SauceModifier,
             _ => throw new ArgumentException($"Cannot place {ToppingType} on top of your pizza.")
         };
 
-        return _base_calories_per_gram * modifier;
+        return BaseCaloriesPerGram * modifier;
     }
 
     public double CalculateCalories()
@@ -142,29 +142,29 @@ public class Topping
 
 public class Pizza
 {
-    private string _name;
-    private Dough _dough;
-    private List<Topping> _toppings = new List<Topping>();
+    private string name;
+    private Dough dough;
+    private List<Topping> toppings = new List<Topping>();
 
     public string Name
     {
-        get => _name;
+        get => name;
         private set
         {
             if (string.IsNullOrWhiteSpace(value) || value.Length > 15)
             {
                 throw new ArgumentException("Pizza name should be between 1 and 15 characters.");
             }
-            _name = value;
+            name = value;
         }
     }
 
-    public int ToppingCount => _toppings.Count;
+    public int ToppingCount => toppings.Count;
 
     public Pizza(string name, Dough dough)
     {
         Name = name;
-        _dough = dough;
+        this.dough = dough;
     }
 
     public void AddTopping(Topping topping)
@@ -173,20 +173,20 @@ public class Pizza
         {
             throw new InvalidOperationException("Number of toppings should be in range [0..10].");
         }
-        _toppings.Add(topping);
+        toppings.Add(topping);
     }
 
     public Dough Dough
     {
-        get => _dough;
-        set => _dough = value;
+        get => dough;
+        set => dough = value;
     }
 
     public double CalculateTotalCalories()
     {
-        double total_calories = _dough.CalculateCalories();
-        total_calories += _toppings.Sum(t => t.CalculateCalories());
-        return total_calories;
+        double totalCalories = dough.CalculateCalories();
+        totalCalories += toppings.Sum(t => t.CalculateCalories());
+        return totalCalories;
     }
 }
 
@@ -199,49 +199,49 @@ public class Program
         {
             try
             {
-                string pizza_name = input;
+                string pizzaName = input;
 
-                string[] dough_parts = Console.ReadLine().Split();
-                if (dough_parts.Length != 4 || dough_parts[0] != "Dough")
+                string[] doughParts = Console.ReadLine().Split();
+                if (doughParts.Length != 4 || doughParts[0] != "Dough")
                 {
                     Console.WriteLine("Invalid input.");
                     continue;
                 }
 
-                string flour_type = dough_parts[1];
-                string baking_technique = dough_parts[2];
-                double dough_weight;
+                string flourType = doughParts[1];
+                string bakingTechnique = doughParts[2];
+                double doughWeight;
 
-                if (!double.TryParse(dough_parts[3], out dough_weight))
+                if (!double.TryParse(doughParts[3], out doughWeight))
                 {
                     Console.WriteLine("Invalid weight format.");
                     continue;
                 }
 
-                Dough dough = new Dough(flour_type, baking_technique, dough_weight);
+                Dough dough = new Dough(flourType, bakingTechnique, doughWeight);
 
-                Pizza pizza = new Pizza(pizza_name, dough);
+                Pizza pizza = new Pizza(pizzaName, dough);
 
-                string topping_input;
-                while ((topping_input = Console.ReadLine()) != "END")
+                string toppingInput;
+                while ((toppingInput = Console.ReadLine()) != "END")
                 {
-                    string[] topping_parts = topping_input.Split();
-                    if (topping_parts.Length != 3 || topping_parts[0] != "Topping")
+                    string[] toppingParts = toppingInput.Split();
+                    if (toppingParts.Length != 3 || toppingParts[0] != "Topping")
                     {
                         Console.WriteLine("Invalid input.");
                         continue;
                     }
 
-                    string topping_type = topping_parts[1];
-                    double topping_weight;
+                    string toppingType = toppingParts[1];
+                    double toppingWeight;
 
-                    if (!double.TryParse(topping_parts[2], out topping_weight))
+                    if (!double.TryParse(toppingParts[2], out toppingWeight))
                     {
                         Console.WriteLine("Invalid weight format.");
                         continue;
                     }
 
-                    Topping topping = new Topping(topping_type, topping_weight);
+                    Topping topping = new Topping(toppingType, toppingWeight);
 
                     pizza.AddTopping(topping);
                 }
